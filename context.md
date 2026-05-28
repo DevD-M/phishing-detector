@@ -21,4 +21,6 @@ Phase 1 — Setting up environment + Feature extraction
 (will fill as we create them)
 
 ## Where I Left Off
-Environment setup done. Starting Python venv next.
+Jupyter notebook working in VS Code with venv (Python 3.12.10) selected.
+Next step: Type first cell - import sys / print(sys.executable) - and run with Shift+Enter.
+Then download Kaggle dataset and start feature extraction.
