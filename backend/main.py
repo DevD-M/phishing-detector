@@ -6,6 +6,7 @@ import numpy as np
 from backend.database import get_connection
 from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -13,7 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app = FastAPI()
 
 model = joblib.load("ml/phishing_model.pkl")
 
