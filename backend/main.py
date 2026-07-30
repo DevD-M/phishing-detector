@@ -5,6 +5,7 @@ import joblib
 import numpy as np
 from backend.database import get_connection
 from fastapi.middleware.cors import CORSMiddleware
+from ml.features import extract_features
 
 app = FastAPI()
 app.add_middleware(
@@ -26,9 +27,8 @@ def read_root():
 
 @app.post("/scan")
 def scan_url(request: URLRequest):
-    # Dummy features for now
-    dummy_features = np.zeros((1, 30))
-    
+
+    dummy_features = [extract_features(request.url)]
     prediction_raw = model.predict(dummy_features)[0]
     confidence = model.predict_proba(dummy_features)[0].max()
     prediction_label = "legitimate" if prediction_raw == 1 else "phishing"
