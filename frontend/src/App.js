@@ -5,6 +5,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [scans, setScans] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
 
   // Fetch scan history on page load
   useEffect(() => {
@@ -102,31 +103,51 @@ function App() {
         </thead>
         <tbody>
           {scans.map((scan) => (
-            <tr key={scan.id}>
-              <td style={td}>{scan.id}</td>
-              <td style={td}>{scan.url.length > 40 ? scan.url.substring(0, 40) + "..." : scan.url}</td>
-              <td style={{ ...td, color: scan.prediction === "phishing" ? "red" : "green", fontWeight: "bold" }}>
-                {scan.prediction}
-              </td>
-              <td style={td}>{(scan.confidence * 100).toFixed(1)}%</td>
-              <td style={td}>{scan.scanned_at}</td>
-              <td style={td}>
-                <button
-                  onClick={() => handleDelete(scan.id)}
-                  style={{
-                    padding: "4px 10px",
-                    fontSize: "13px",
-                    backgroundColor: "#ff4444",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer"
-                  }}
+            <>
+              <tr key={scan.id}>
+                <td style={td}>{scan.id}</td>
+                <td
+                  style={{ ...td, cursor: scan.explanation ? "pointer" : "default" }}
+                  onClick={() => scan.explanation && setExpandedId(expandedId === scan.id ? null : scan.id)}
+                  title={scan.explanation ? "Click to view explanation" : ""}
                 >
-                  Delete
-                </button>
-              </td>
-            </tr>
+                  {scan.url.length > 40 ? scan.url.substring(0, 40) + "..." : scan.url}
+                  {scan.explanation && (
+                    <span style={{ marginLeft: "6px", color: "#888", fontSize: "12px" }}>
+                      {expandedId === scan.id ? "▲" : "▼"}
+                    </span>
+                  )}
+                </td>
+                <td style={{ ...td, color: scan.prediction === "phishing" ? "red" : "green", fontWeight: "bold" }}>
+                  {scan.prediction}
+                </td>
+                <td style={td}>{(scan.confidence * 100).toFixed(1)}%</td>
+                <td style={td}>{scan.scanned_at}</td>
+                <td style={td}>
+                  <button
+                    onClick={() => handleDelete(scan.id)}
+                    style={{
+                      padding: "4px 10px",
+                      fontSize: "13px",
+                      backgroundColor: "#ff4444",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              {expandedId === scan.id && scan.explanation && (
+                <tr key={`${scan.id}-explanation`}>
+                  <td colSpan={6} style={{ ...td, backgroundColor: "#f9f9f9", fontStyle: "italic" }}>
+                    <strong>Why:</strong> {scan.explanation}
+                  </td>
+                </tr>
+              )}
+            </>
           ))}
         </tbody>
       </table>

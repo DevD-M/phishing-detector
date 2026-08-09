@@ -6,10 +6,11 @@ import numpy as np
 from backend.database import get_connection
 from fastapi.middleware.cors import CORSMiddleware
 from ml.features import extract_features
-from backend.database import init_domain_cache_table
+from backend.database import init_domain_cache_table, init_scans_explanation_column
 from ml.explain import explain_prediction
 
 init_domain_cache_table()
+init_scans_explanation_column()
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -49,12 +50,13 @@ def scan_url(request: URLRequest):
     # Save to database
     with get_connection() as conn:
         conn.execute(text("""
-            INSERT INTO scans (url, prediction, confidence)
-            VALUES (:url, :prediction, :confidence)
+            INSERT INTO scans (url, prediction, confidence, explanation)
+            VALUES (:url, :prediction, :confidence, :explanation)
         """), {
             "url": request.url,
             "prediction": prediction_label,
-            "confidence": float(confidence)
+            "confidence": float(confidence),
+            "explanation": explanation
         })
         conn.commit()
 
@@ -78,7 +80,8 @@ def get_scans():
             "url": row[1],
             "prediction": row[2],
             "confidence": row[3],
-            "scanned_at": str(row[4])
+            "scanned_at": str(row[4]),
+            "explanation": row[5]
         }
         for row in rows
     ]

@@ -36,6 +36,17 @@ def init_domain_cache_table():
         conn.commit()
 
 
+def init_scans_explanation_column():
+    """
+    Adds an 'explanation' column to the existing scans table if it doesn't
+    already exist, so LLM-generated explanations can be persisted alongside
+    each scan. Safe to call every startup — no-ops if the column is already there.
+    """
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE scans ADD COLUMN IF NOT EXISTS explanation TEXT"))
+        conn.commit()
+
+
 def get_cached_domain(domain: str):
     """
     Returns (reg_len_feature, age_feature, cached_at) or None if not cached.
@@ -67,4 +78,4 @@ def upsert_cached_domain(domain: str, reg_len_feature: int, age_feature: int, ca
             "age_feature": age_feature,
             "cached_at": cached_at
         })
-        conn.commit() 
+        conn.commit()
