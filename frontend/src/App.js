@@ -31,6 +31,13 @@ function App() {
     fetchScans(); // refresh history
   };
 
+  const handleDelete = async (id) => {
+    await fetch(`http://localhost:8000/scans/${id}`, {
+      method: "DELETE",
+    });
+    fetchScans(); // refresh history
+  };
+
   return (
     <div style={{ maxWidth: "800px", margin: "40px auto", fontFamily: "Arial", padding: "0 20px" }}>
       
@@ -66,6 +73,17 @@ function App() {
           <h2>{result.prediction === "phishing" ? "⚠️ Phishing Detected!" : "✅ Legitimate"}</h2>
           <p><strong>URL:</strong> {result.url}</p>
           <p><strong>Confidence:</strong> {(result.confidence * 100).toFixed(1)}%</p>
+          {result.explanation && (
+            <div style={{
+              marginTop: "15px",
+              paddingTop: "15px",
+              borderTop: `1px solid ${result.prediction === "phishing" ? "#ffb3b3" : "#b3e6b3"}`
+            }}>
+              <p style={{ margin: 0 }}>
+                <strong>Why:</strong> {result.explanation}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -79,6 +97,7 @@ function App() {
             <th style={th}>Prediction</th>
             <th style={th}>Confidence</th>
             <th style={th}>Time</th>
+            <th style={th}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -91,6 +110,22 @@ function App() {
               </td>
               <td style={td}>{(scan.confidence * 100).toFixed(1)}%</td>
               <td style={td}>{scan.scanned_at}</td>
+              <td style={td}>
+                <button
+                  onClick={() => handleDelete(scan.id)}
+                  style={{
+                    padding: "4px 10px",
+                    fontSize: "13px",
+                    backgroundColor: "#ff4444",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
