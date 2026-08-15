@@ -60,7 +60,7 @@ Terminal 2: `cd D:\Projects\phishing-detector\frontend` → `npm start`
    false-negative classification on test phishing URLs"; "built an LLM-grounded explainability layer using
    Groq API"). This was flagged as the top overall priority before this cycle started.
 
-2. **Internship applications** — Internshala, LinkedIn, Wellfound, Twitter/X outreach — was top priority
+2y. **Internship applications** — Internshala, LinkedIn, Wellfound, Twitter/X outreach — was top priority
    before this side-quest into feature.py started.
 
 

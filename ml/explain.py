@@ -81,8 +81,9 @@ Each line above is already labeled [OK] or [SUSPICIOUS] — do not relabel or re
 
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            max_tokens=200,
+            model="openai/gpt-oss-20b",
+            max_tokens=700,
+            reasoning_effort="low",
             messages=[{"role": "user", "content": prompt}]
         )
         return response.choices[0].message.content.strip()
